@@ -62,34 +62,14 @@ def count() :
     EYE_AR_CONSEC_FRAMES = args['frames']
     global COUNTER
     global TOTAL
-    # initialize the frame counters and the total number of blinks
-#    COUNTER = 0
- #   TOTAL = 0
 
-    # initialize dlib's face detector (HOG-based) and then create
-    # the facial landmark predictor
- #   print("[INFO] loading facial landmark predictor...")
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(args["shape_predictor"])
  
-    # grab the indexes of the facial landmarks for the left and
-    # right eye, respectively
     (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
     (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
     
-    # start the video stream thread
-#    print("[INFO] starting video stream thread...")
-#    print("[INFO] print q to quit...")
-#    time.sleep(1.0)
-    
-    # loop over frames from the video stream
-#    while True:
-    	# if this is a file video stream, then we need to check if
-    	# there any more frames left in the buffer to proces    
-    	# grab the frame from the threaded video file stream, resize
-    	# it, and convert it to grayscale
-    	# channels)
-    #frame = imutils.resize(frame, width=450)
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
     # detect faces in the grayscale frame
@@ -97,9 +77,6 @@ def count() :
 
     # loop over the face detections
     for rect in rects:
-    	# determine the facial landmarks for the face region, then
-    	# convert the facial landmark (x, y)-coordinates to a NumPy
-    	# array
     	shape = predictor(gray, rect)
     	shape = face_utils.shape_to_np(shape)
 
@@ -128,22 +105,8 @@ def count() :
     	# otherwise, the eye aspect ratio is not below the blink
     	# threshold
     	else:
-    		# if the eyes were closed for a sufficient number of
-    		# then increment the total number of blinks
     		if COUNTER >= EYE_AR_CONSEC_FRAMES:
     			TOTAL += 1
-
-    		# reset the eye frame counter
-    		#COUNTER = 0
-
-    	# draw the total number of blinks on the frame along with
-    	# the computed eye aspect ratio for the frame
-    
-    # show the frame
- #   cv2.imshow("Frame1", frame1)
- #   key = cv2.waitKey(1) & 0xFF
-     
-    # if the `q` key was pressed, break from the loop
 
 
 with tf.Graph().as_default():
@@ -262,7 +225,7 @@ with tf.Graph().as_default():
                             
                 else:
                     print('Alignment Failure')
-            # c+=1
+            
             cv2.imshow('Video', frame)
             if cnt==60:
                 print(ar)
@@ -277,7 +240,6 @@ with tf.Graph().as_default():
                 else:
                     print("REAL")
             if cv2.waitKey(1) & 0xFF == ord('q'): 
-                
                 break
 
         video_capture.release()

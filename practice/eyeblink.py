@@ -35,7 +35,7 @@ ap.add_argument("-t", "--threshold", type = float, default=0.27,
 ap.add_argument("-f", "--frames", type = int, default=2,
 	help="the number of consecutive frames the eye must be below the threshold")
 
-def main(frame) :
+def main() :
     args = vars(ap.parse_args())
     EYE_AR_THRESH = args['threshold']
     EYE_AR_CONSEC_FRAMES = args['frames']
@@ -57,7 +57,8 @@ def main(frame) :
     
     # start the video stream thread
     print("[INFO] starting video stream thread...")
-    print("[INFO] print q to quit...")   
+    print("[INFO] print q to quit...") 
+  
     #time.sleep(1.0)
     
     # loop over frames from the video stream
