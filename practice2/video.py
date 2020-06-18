@@ -77,7 +77,7 @@ with tf.Graph().as_default():
         c = 0
         m=0
         p=0
-
+        checkvideo=0
         print('Start Recognition')
         prevTime = 0
         cnt=0
@@ -93,13 +93,16 @@ with tf.Graph().as_default():
                 img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
                 u1 = x + w
                 u2 = y + h
-                cir = cv2.circle(img, (int(x + w / 2), int(y + h / 2)), 1, (0, 255, 255), 2)
-                print (x + w / 2, y + h / 2)
+                #cir = cv2.circle(img, (int(x + w / 2), int(y + h / 2)), 1, (0, 255, 255), 2)
+                #print (x + w / 2, y + h / 2)
                 #The below code is responsible for moving the mouse cursor in near real-time. Uncomment the below line to test it out.
                 # m.moveTo(c1 * x + w / 2, c2 * y + h / 2, 0)
                 roi_gray = gray[y:y + h, x:x + w]
                 roi_color = img[y:y + h, x:x + w]
                 eyes = eye_cascade.detectMultiScale(roi_gray, 1.3, 5)
+                print(w*h)
+                if w*h<7000 or w*h>15000:
+                    checkvideo=1
             for (ex, ey, ew, eh) in eyes:
                 k = 0
                 cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (255, 255, 0), 2)
@@ -155,11 +158,11 @@ with tf.Graph().as_default():
                         feed_dict = {images_placeholder: scaled_reshape[i], phase_train_placeholder: False}
                         emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
                         predictions = model.predict_proba(emb_array)
-                        print(predictions)
+                        #print(predictions)
                         best_class_indices = np.argmax(predictions, axis=1)
                         best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
                         # print("predictions")
-                        print(best_class_indices,' with accuracy ',best_class_probabilities)
+                        #print(best_class_probabilities)
                         cnt+=1
                         ar[best_class_indices[0]]+=1
                         # print(best_class_probabilities)
@@ -170,7 +173,7 @@ with tf.Graph().as_default():
                             text_x = bb[i][0]
                             text_y = bb[i][3] + 20
                             #print('Result Indices: ', best_class_indices[0])
-                            print(HumanNames)
+                            #print(HumanNames)
                             for H_i in HumanNames:
                                 if HumanNames[best_class_indices[0]] == H_i:
                                     result_names = HumanNames[best_class_indices[0]]
@@ -191,7 +194,7 @@ with tf.Graph().as_default():
                         m=ar[po]
                         p=po
                 print('recognition : ',HumanNames[p])
-                if COUNTER==0:
+                if COUNTER==0 or checkvideo==1:
                     print("NOT REAL")
                 else:
                     print("REAL")
